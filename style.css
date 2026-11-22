@@ -1482,3 +1482,16 @@ body[data-scene="dawn"] .sky:after {
 .cluster.focused .star-choice {
   visibility: visible;
 }
+/* A rehearsal reminder, never shown in the real experience or recorded film. */
+#preview-tag {
+  position: fixed;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(8px, env(safe-area-inset-bottom));
+  z-index: 45;
+  pointer-events: none;
+  font-size: 0.5rem;
+  letter-spacing: 0.18em;
+  color: var(--ice);
+  opacity: 0.6;
+}
+.cinema #preview-tag { display: none; }

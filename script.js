@@ -1,4 +1,6 @@
 const CONFIG = {
+  // EDIT ME: Rehearse the full birthday without changing the real midnight.
+  previewMode: false,
   // ---------- PEOPLE & DATES ----------
   herName: "Shaista",
   senderName: "{{FRIEND_NAME}}", // EDIT ME: the boyfriend's name
@@ -192,6 +194,8 @@ const CONFIG = {
     skyHint: "Tap the sky. It listens.",
     countdownEyebrow: "The sky is holding its breath",
     birthEyebrow: "The night her star was born",
+    previewTag: "PREVIEW",
+    previewBirthdaySub: "3 December 2026 · 12:00 AM",
     birthdayTitle: "Happy {age}th Birthday, {name} ✨",
     birthdaySub:
       "On 3rd December, the universe added one more star. It belongs to you.",
@@ -247,6 +251,8 @@ const CONFIG = {
 const $ = (id) => document.getElementById(id);
 const params = new URLSearchParams(location.search);
 const cinema = params.get("cinema") === "1";
+// Cinema always retains its own timeline, even when preview is requested.
+const preview = !cinema && (CONFIG.previewMode || params.get("preview") === "1");
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const replace = (text) =>
   String(text)
@@ -694,6 +700,11 @@ $("sound").onclick = async () => {
   syncSound();
 };
 function route() {
+  if (preview) {
+    countdownTarget = now() + 10000;
+    startCountdown();
+    return;
+  }
   const test = params.get("test");
   if (test === "countdown") {
     countdownTarget = now() + 10000;
@@ -783,8 +794,8 @@ function startCountdown(film = false) {
       document
         .querySelector(".count-halo")
         .style.setProperty("--halo", 80 + (10 - n) * 14 + "px");
-      if (n > 3) audio.heartbeat();
-      else audio.fade(0, 0.35);
+      if (n > 3 || (preview && n > 0)) audio.heartbeat();
+      else if (!preview) audio.fade(0, 0.35);
       if (n > 0)
         setTimeout(() => {
           if (token === generation)
@@ -851,7 +862,7 @@ async function startBirth(film = false) {
   );
   await wait(1600);
   if (token !== generation) return;
-  text($("birthday-sub"), CONFIG.ui.birthdaySub);
+  text($("birthday-sub"), preview ? CONFIG.ui.previewBirthdaySub : CONFIG.ui.birthdaySub);
   $("birthday-sub").style.opacity = 1;
   if (!film) {
     await wait(5500);
@@ -1480,9 +1491,11 @@ async function playCinema() {
 // Populate static text, then choose either the private entrance or rehearsal route.
 for (const el of document.querySelectorAll("[data-copy]"))
   text(el, CONFIG.ui[el.dataset.copy]);
+text($("preview-tag"), CONFIG.ui.previewTag);
+$("preview-tag").hidden = !preview;
 text($("brand"), CONFIG.ui.brand);
 text($("edition"), CONFIG.ui.edition);
-text($("birthday-sub"), CONFIG.ui.birthdaySub);
+text($("birthday-sub"), preview ? CONFIG.ui.previewBirthdaySub : CONFIG.ui.birthdaySub);
 try {
   const saved = JSON.parse(localStorage.getItem("shaista-visited") || "[]");
   saved.forEach((items, g) => {

@@ -91,3 +91,11 @@ The sky calms down with reduced motion and reduces detail on slow devices.
 VALIDATION
 See tests/RESULTS.md for the checks performed and device/browser limitations.
 The optional development tests are not needed to open or host the website.
+
+TEST PREVIEW MODE
+Open index.html?preview=1, enter the normal password and tap Unlock to rehearse
+10 → 00, Birth, and the complete interactive story without waiting for December.
+Music stays on through this preview countdown; the one-second darkness remains.
+A small PREVIEW tag marks rehearsals. Alternatively set previewMode: true in CONFIG.
+To turn preview off, remove preview=1 from the URL AND set previewMode: false.
+Cinema ignores preview mode. The real birthday target and midnight rules are unchanged.
