@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#08122b" />
+    <meta
+      name="description"
+      content="A little sky, a midnight wish, and a star born just for you."
+    />
+    <title>A star for Shaista ✨</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Cormorant+Garamond:ital,wght@0,300;0,500;1,500&family=Great+Vibes&family=Quicksand:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body data-scene="gate">
+    <div class="sky" aria-hidden="true"></div>
+    <div class="aurora" aria-hidden="true"></div>
+    <canvas id="starfield" aria-hidden="true"></canvas>
+    <div class="vignette" aria-hidden="true"></div>
+    <div id="effects" aria-hidden="true"></div>
+    <header class="site-header">
+      <a
+        class="wordmark"
+        href="./index.html"
+        aria-label="The night her star was born"
+        ><span>✧</span><span id="brand"></span></a
+      ><span class="edition" id="edition"></span
+      ><button
+        id="sound"
+        class="icon-button"
+        aria-label="Unmute sound"
+        aria-pressed="false"
+      >
+        ♪<span class="sound-slash">╱</span>
+      </button>
+    </header>
+    <main id="story">
+      <section id="gate" class="scene active" aria-labelledby="gate-title">
+        <div class="gate-content">
+          <div class="keyhole" aria-hidden="true"><span>✧</span><i></i></div>
+          <p class="eyebrow" data-copy="gateEyebrow"></p>
+          <h1 id="gate-title" data-copy="gateTitle"></h1>
+          <p class="subtitle" data-copy="gateSub"></p>
+          <div class="gate-controls">
+            <label
+              class="sr-only"
+              for="password"
+              data-copy="passwordLabel"
+            ></label
+            ><input
+              id="password"
+              type="text"
+              inputmode="numeric"
+              autocomplete="off"
+              maxlength="24"
+              placeholder="D M Y"
+              aria-describedby="password-hint gate-message"
+            /><button id="unlock" class="pill" data-copy="unlock"></button>
+          </div>
+          <p id="password-hint" class="hint" data-copy="passwordHint"></p>
+          <p id="gate-message" class="gate-message" aria-live="polite"></p>
+        </div>
+        <p class="scene-footer" data-copy="soundHint"></p>
+      </section>
+      <section
+        id="locked"
+        class="scene"
+        aria-label="Waiting for midnight"
+        inert
+      >
+        <div class="centered">
+          <span class="waiting-star">✦</span>
+          <h1 id="locked-line" aria-live="polite"></h1>
+          <p id="clock" class="eyebrow" aria-live="off"></p>
+          <p id="sky-hint" class="hint"></p>
+        </div>
+      </section>
+      <section
+        id="countdown"
+        class="scene"
+        aria-label="The last ten seconds"
+        inert
+      >
+        <div class="centered">
+          <p class="eyebrow" data-copy="countdownEyebrow"></p>
+          <div class="count-halo"></div>
+          <div id="number" aria-live="polite">10</div>
+          <span class="waiting-star">✦</span>
+        </div>
+      </section>
+      <section id="birth" class="scene" aria-label="A star is born" inert>
+        <div id="birth-stars"></div>
+        <canvas id="name-stars" aria-hidden="true"></canvas>
+        <div class="centered birth-copy">
+          <p class="eyebrow" data-copy="birthEyebrow"></p>
+          <h1 id="birthday-title"></h1>
+          <p id="birthday-sub" class="subtitle"></p>
+        </div>
+      </section>
+      <section id="galaxy" class="scene" aria-labelledby="galaxy-title" inert>
+        <div class="galaxy-heading">
+          <p class="eyebrow" data-copy="galaxyEyebrow"></p>
+          <h1 id="galaxy-title" data-copy="galaxyTitle"></h1>
+        </div>
+        <button class="moon" id="moon" aria-label="Moon"></button>
+        <div id="constellations"></div>
+        <button class="own-star" id="own-star" aria-label="Your own star">
+          ✦</button
+        ><button class="corner-star" id="corner-star" aria-label="A quiet star">
+          ✧</button
+        ><button id="shooting-star" aria-label="Catch a shooting star"></button>
+        <div class="galaxy-footer">
+          <p class="hint" id="guide" data-copy="guide"></p>
+          <p class="eyebrow" id="progress"></p>
+        </div>
+      </section>
+      <section
+        id="secret"
+        class="scene"
+        aria-label="The secret nineteenth star"
+        inert
+      >
+        <div class="centered">
+          <p id="secret-line" class="eyebrow" data-copy="secretLine"></p>
+          <button id="secret-star" aria-label="Open star nineteen">
+            ✦<small data-copy="star19"></small>
+          </button>
+        </div>
+        <article id="letter-panel" class="letter-panel" hidden>
+          <div id="letter" aria-live="polite"></div>
+          <button
+            id="continue"
+            class="pill"
+            data-copy="continue"
+            hidden
+          ></button>
+        </article>
+      </section>
+      <section id="wish" class="scene" aria-labelledby="wish-title" inert>
+        <div class="centered">
+          <p class="eyebrow" data-copy="wishEyebrow"></p>
+          <h1 id="wish-title" data-copy="wishTitle"></h1>
+          <button
+            id="candle"
+            aria-label="Hold for 2.2 seconds to blow out the candle"
+          >
+            <span class="flame"></span><span class="wick"></span
+            ><span class="wax"></span><span class="smoke"></span>
+          </button>
+          <p id="wish-hint" class="hint" data-copy="wishHint"></p>
+        </div>
+      </section>
+      <section id="dawn" class="scene" aria-label="A new day" inert>
+        <div class="dawn-content">
+          <p class="eyebrow" data-copy="dawnEyebrow"></p>
+          <h1 id="final-line"></h1>
+          <article id="certificate" class="certificate">
+            <span class="certificate-star">✦</span>
+            <p class="eyebrow" data-copy="certificateTitle"></p>
+            <h2 id="certificate-name"></h2>
+            <p id="certificate-date"></p>
+            <p id="certificate-named"></p>
+            <em data-copy="certificateMotto"></em>
+            <p id="signature"></p>
+          </article>
+          <div class="final-buttons">
+            <button id="replay" class="pill" data-copy="replay"></button
+            ><button id="save" class="pill" data-copy="save"></button>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div id="modal" class="modal" hidden>
+      <article
+        class="glass"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="card-title"
+        tabindex="-1"
+      >
+        <button
+          id="close-card"
+          class="close icon-button"
+          aria-label="Close card"
+        >
+          ×
+        </button>
+        <div id="card-content"></div>
+      </article>
+    </div>
+    <div id="cinema-start" hidden><p data-copy="cinemaStart"></p></div>
+    <div id="blackout" aria-hidden="true"></div>
+    <noscript>This sky needs JavaScript. Please enable it to begin.</noscript>
+  </body>
+</html>
