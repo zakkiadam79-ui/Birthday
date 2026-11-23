@@ -785,16 +785,18 @@ const CONFIG = {
   // Dispatch one scene object to its renderer.
   function renderScene(scene, index) {
     const root = el("div", "scene");
+    const inner = el("div", "scene-inner");
+    root.appendChild(inner);
     switch (scene.type) {
-      case "waiting": renderWaiting(root, scene); break;
-      case "photo": renderPhoto(root, scene, index); break;
-      case "poem": renderPoem(root, scene); break;
-      case "wishes": renderWishes(root, scene); break;
-      case "clock": renderClock(root, scene); break;
-      case "birthday": renderBirthday(root, scene); break;
-      case "letter": renderLetter(root, scene); break;
-      case "end": renderEnd(root); break;
-      default: root.appendChild(el("div", "scene-caption", "…"));
+      case "waiting": renderWaiting(inner, scene); break;
+      case "photo": renderPhoto(inner, scene, index); break;
+      case "poem": renderPoem(inner, scene); break;
+      case "wishes": renderWishes(inner, scene); break;
+      case "clock": renderClock(inner, scene); break;
+      case "birthday": renderBirthday(inner, scene); break;
+      case "letter": renderLetter(inner, scene); break;
+      case "end": renderEnd(inner); break;
+      default: inner.appendChild(el("div", "scene-caption", "…"));
     }
     return root;
   }
@@ -961,9 +963,18 @@ const CONFIG = {
     }
   }
 
-  // Move to a scene with a cross-fade.
-  function goToScene(i) {
+  // Sum of the durations of every scene before index i.
+  // Used so the story clock stays consistent when jumping to a scene.
+  function sceneStartTime(i) {
+    let t = 0;
+    for (let k = 0; k < i; k++) t += sceneDuration(activeScenes[k]);
+    return t;
+  }
+
+  // Move to a scene with a cross-fade. `jump` re-syncs the story clock.
+  function goToScene(i, jump) {
     if (i < 0 || i >= activeScenes.length) return;
+    if (jump) totalElapsed = sceneStartTime(i);
     sceneIndex = i;
     sceneElapsed = 0;
     lastClockSecond = -1;
@@ -1054,7 +1065,7 @@ const CONFIG = {
     if (started) return;
     started = true;
     buildScenes();
-    goToScene(initialIndex);
+    goToScene(initialIndex, true);
     playing = true;
   }
 
@@ -1096,13 +1107,13 @@ const CONFIG = {
     $("btnPause").textContent = "⏸";
     $("stage").classList.remove("paused");
     AudioEngine.letterStop();
-    goToScene(0);
+    goToScene(0, true);
     scheduleHudFade();
   }
 
   function skipScene() {
     if (!started) return;
-    goToScene(Math.min(activeScenes.length - 1, sceneIndex + 1));
+    goToScene(Math.min(activeScenes.length - 1, sceneIndex + 1), true);
   }
 
   function toggleSound() {
@@ -1133,7 +1144,7 @@ const CONFIG = {
       switch (e.code) {
         case "Space": e.preventDefault(); togglePause(); break;
         case "ArrowRight": skipScene(); break;
-        case "ArrowLeft": goToScene(Math.max(0, sceneIndex - 1)); break;
+        case "ArrowLeft": goToScene(Math.max(0, sceneIndex - 1), true); break;
         case "KeyR": replayStory(); break;
         case "KeyM": toggleSound(); break;
       }

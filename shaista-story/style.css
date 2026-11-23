@@ -334,26 +334,36 @@ button {
 
 /* ---------- 7. Scene host & generic scene elements ---------- */
 .scene-host {
+  position: relative;
   flex: 1;
   min-height: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
-  padding: 8px 0;
 }
 
+/* Scenes are stacked (absolutely positioned) so the outgoing and incoming
+   scenes overlap and cross-fade instead of sitting side by side. */
 .scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  overflow-y: auto;
+  overflow-x: hidden;
+  will-change: transform, opacity, filter;
+}
+
+/* margin:auto centres the content, and still lets tall content scroll. */
+.scene-inner {
+  margin: auto;
   width: 100%;
   max-width: 880px;
-  margin: 0 auto;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 16px;
   padding: 6px 16px;
-  will-change: transform, opacity, filter;
+  box-sizing: border-box;
 }
 
 .scene-exit { animation: sceneOut .6s cubic-bezier(.22, 1, .36, 1) both; }
@@ -737,9 +747,10 @@ body.record #stage { cursor: none; }
 @media (max-width: 700px) {
   .photo-card { height: min(46vh, 400px); }
   #hud { gap: 6px 8px; }
-  .hud-right { width: 100%; margin-left: 0; justify-content: flex-start; }
+  .hud-right { width: 100%; margin-left: 0; justify-content: flex-start; gap: 6px; }
   .name-chip, .time-chip { font-size: .66rem; padding: 6px 11px; }
-  .scene { gap: 13px; }
+  .ctrl-sound { padding: 0 10px; }
+  .scene-inner { gap: 13px; }
 }
 
 /* Short / landscape screens: shrink the photo so nothing is clipped */
